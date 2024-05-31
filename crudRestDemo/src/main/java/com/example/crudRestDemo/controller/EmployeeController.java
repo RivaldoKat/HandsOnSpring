@@ -5,12 +5,10 @@ import com.example.crudRestDemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/employees")
@@ -54,5 +52,23 @@ public class EmployeeController {
         // use a redirect to prevent duplicate submissions
         return "redirect:list";
 
+    }
+
+    @GetMapping("/showFormForUpdate")
+    public String updateEmployee(@RequestParam("employeeId") int id,Model model) {
+
+        Optional<Employee> updateEmployee = employeeService.findById(id);
+
+        model.addAttribute("employee",updateEmployee);
+
+        return "employee-form";
+    }
+
+    @GetMapping("/delete")
+    public String deleteEmployee(@RequestParam("employeeId") Employee employee) {
+
+        employeeService.deleteById(employee.getId());
+
+        return "redirect:list";
     }
 }
